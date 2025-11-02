@@ -9,27 +9,24 @@ const AttendanceModal = ({ onClose }) => {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
+  const [isCameraActive, setIsCameraActive] = useState(false);
 
   // Clean up camera on unmount
   useEffect(() => {
     return () => {
-      closeCamera();
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+      }
     };
   }, []);
 
-  const closeCamera = () => {
-    if (streamRef.current) {
-      console.log('🛑 Stopping camera stream');
-      streamRef.current.getTracks().forEach(track => {
-        console.log('Stopping track:', track.kind, track.readyState);
-        track.stop();
-      });
-      streamRef.current = null;
+  // Debug: Check video ref when step changes to camera
+  useEffect(() => {
+    if (step === 'camera' && videoRef.current) {
+      console.log('🎬 Video ref is now available:', videoRef.current);
     }
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
-  };
+  }, [step]);
 
   const startCamera = async () => {
     try {
@@ -38,133 +35,143 @@ const AttendanceModal = ({ onClose }) => {
       setCameraStatus('Requesting camera access...');
 
       // Stop any existing stream first
-      closeCamera();
-
-      // Reset video element
-      if (videoRef.current) {
-        videoRef.current.srcObject = null;
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
       }
 
       console.log('📹 Getting user media...');
+      
+      // Get camera stream
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
-          width: { ideal: 1280 },
-          height: { ideal: 720 },
+          width: { ideal: 640 },
+          height: { ideal: 480 },
           facingMode: 'user'
-        }
+        },
+        audio: false
       });
-      
-      console.log('✅ Camera stream obtained:', stream);
-      console.log('📹 Video tracks:', stream.getVideoTracks());
-      console.log('📹 Track settings:', stream.getVideoTracks()[0]?.getSettings());
+
+      console.log('✅ Camera stream obtained');
+      streamRef.current = stream;
       
       setCameraStatus('Camera accessed, setting up video...');
+      setStep('camera'); // Switch to camera step FIRST
+      
+      // Wait for React to render the video element
+      await new Promise(resolve => setTimeout(resolve, 100));
 
+      console.log('🎬 Looking for video element...');
+      
+      // Now the video element should be available since we're on camera step
       if (videoRef.current) {
         const video = videoRef.current;
+        console.log('✅ Video element found:', video);
         
-        // CRITICAL: Set srcObject BEFORE any event listeners
-        console.log('🎬 Setting srcObject on video element...');
+        // Set the stream to video element
         video.srcObject = stream;
-        streamRef.current = stream;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.muted = true;
         
+        console.log('🎬 Stream assigned to video element');
         console.log('🔍 Video srcObject after assignment:', video.srcObject);
-        
-        // Set up event listeners
-        const events = {
-          loadstart: () => console.log('📹 Video loadstart'),
-          loadeddata: () => console.log('📹 Video loadeddata'),
-          loadedmetadata: () => console.log('📹 Video loadedmetadata'),
-          canplay: () => console.log('🎬 Video canplay'),
-          play: () => console.log('▶️ Video play'),
-          playing: () => console.log('🎭 Video playing'),
-          error: (e) => console.error('❌ Video error:', e)
-        };
 
-        // Add all event listeners
-        Object.entries(events).forEach(([event, handler]) => {
-          video.addEventListener(event, handler);
-        });
-
-        // Try to play the video
-        console.log('▶️ Attempting to play video...');
-        try {
-          await video.play();
-          console.log('✅ Video play() successful');
-        } catch (playError) {
-          console.error('❌ Video play() failed:', playError);
-        }
-
-        // Wait for video to be ready with timeout
+        // Wait for video to load
         await new Promise((resolve) => {
-          const onReady = () => {
-            console.log('✅ Video is ready to display');
+          const onLoadedData = () => {
+            console.log('✅ Video loaded data');
             console.log('📐 Video dimensions:', video.videoWidth, 'x', video.videoHeight);
-            setCameraStatus(`Camera ready! ${video.videoWidth}x${video.videoHeight}`);
+            video.removeEventListener('loadeddata', onLoadedData);
             resolve();
           };
 
-          if (video.readyState >= 3) { // HAVE_FUTURE_DATA or better
-            console.log('⚡ Video already ready, state:', video.readyState);
-            onReady();
-            return;
-          }
-
-          video.addEventListener('canplay', onReady, { once: true });
+          video.addEventListener('loadeddata', onLoadedData);
           
           // Fallback timeout
           setTimeout(() => {
-            console.log('⏰ Video ready timeout, current state:', video.readyState);
-            console.log('📐 Current dimensions:', video.videoWidth, 'x', video.videoHeight);
-            video.removeEventListener('canplay', onReady);
+            console.log('⏰ Video load timeout');
+            video.removeEventListener('loadeddata', onLoadedData);
             resolve();
           }, 3000);
         });
 
-        // Clean up event listeners
-        Object.entries(events).forEach(([event, handler]) => {
-          video.removeEventListener(event, handler);
-        });
-      }
+        // Try to play
+        try {
+          await video.play();
+          console.log('✅ Video play successful');
+          setCameraStatus('✅ Camera ready! Position your face in the circle');
+          setIsCameraActive(true);
+        } catch (playError) {
+          console.log('⚠️ Video play failed, but stream might work:', playError);
+          setCameraStatus('🎥 Camera active - Position your face');
+          setIsCameraActive(true);
+        }
 
-      setStep('camera');
+        // Final check
+        setTimeout(() => {
+          console.log('🔍 Final check - Video dimensions:', video.videoWidth, 'x', video.videoHeight);
+          if (video.videoWidth > 0 && video.videoHeight > 0) {
+            console.log('🎉 SUCCESS: Video is displaying!');
+          }
+        }, 1000);
+
+      } else {
+        console.error('❌ Video element still not found!');
+        setCameraStatus('❌ Camera setup failed - Please try again');
+        // Fallback: try to set stream again after a delay
+        setTimeout(() => {
+          if (videoRef.current && streamRef.current) {
+            console.log('🔄 Fallback: Setting stream to video element');
+            videoRef.current.srcObject = streamRef.current;
+          }
+        }, 500);
+      }
       
     } catch (error) {
       console.error('❌ Camera initialization failed:', error);
       setCameraStatus(`Camera error: ${error.message}`);
       
-      alert(`Camera Error: ${error.name}\n${error.message}\n\nPlease ensure:\n1. Camera permissions are allowed\n2. No other app is using the camera\n3. Your camera is working properly`);
+      let errorMessage = 'Camera Error:\n\n';
+      if (error.name === 'NotAllowedError') {
+        errorMessage += 'Camera permission was denied. Please allow camera access in your browser settings.';
+      } else if (error.name === 'NotFoundError') {
+        errorMessage += 'No camera found. Please check if your camera is connected.';
+      } else {
+        errorMessage += `${error.message}\n\nPlease check camera permissions and try again.`;
+      }
+      
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
   const captureAndRecognize = async () => {
+    if (!videoRef.current) {
+      alert('Camera not ready. Please try again.');
+      return;
+    }
+
     setLoading(true);
     setCameraStatus('Capturing image...');
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
 
-    if (!video || !canvas) {
-      alert('Camera not initialized. Please try again.');
-      setLoading(false);
-      return;
-    }
-
-    // Check if video is actually playing
-    if (video.videoWidth === 0 || video.videoHeight === 0) {
-      alert('Camera not ready. Please wait for camera to initialize.');
-      setLoading(false);
-      return;
-    }
-
     try {
       const context = canvas.getContext('2d');
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
+      
+      // Use actual dimensions or fallback
+      const width = video.videoWidth || 640;
+      const height = video.videoHeight || 480;
+      
+      canvas.width = width;
+      canvas.height = height;
 
-      // Draw current video frame to canvas
+      console.log('📸 Capturing image...');
+      
+      // Draw video frame to canvas
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
       setCameraStatus('Processing face recognition...');
 
@@ -196,11 +203,11 @@ const AttendanceModal = ({ onClose }) => {
             setStep('result');
             setCameraStatus('Attendance marked successfully!');
           } else {
-            alert(result.error || 'Recognition failed');
-            setCameraStatus('Recognition failed');
+            alert(result.error || 'Face recognition failed. Please try again.');
+            setCameraStatus('Recognition failed - Try again');
           }
         } catch (error) {
-          alert('Recognition failed: ' + error.message);
+          alert('Network error: ' + error.message);
           setCameraStatus('Network error');
         } finally {
           setLoading(false);
@@ -215,46 +222,42 @@ const AttendanceModal = ({ onClose }) => {
   };
 
   const handleClose = () => {
-    closeCamera();
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    setIsCameraActive(false);
     onClose();
   };
 
   const handleBackToInstructions = () => {
-    closeCamera();
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    setIsCameraActive(false);
     setStep('instructions');
     setCameraStatus('Ready to start');
   };
 
-  // Test function to check if video is working
   const testVideoElement = () => {
+    console.log('=== VIDEO DEBUG ===');
+    console.log('videoRef.current:', videoRef.current);
+    console.log('streamRef.current:', streamRef.current);
+    
     if (videoRef.current) {
       const video = videoRef.current;
-      console.log('🔍 VIDEO ELEMENT DEBUG INFO:');
-      console.log('- srcObject:', video.srcObject);
-      console.log('- videoWidth:', video.videoWidth);
-      console.log('- videoHeight:', video.videoHeight);
-      console.log('- readyState:', video.readyState);
-      console.log('- paused:', video.paused);
-      console.log('- currentTime:', video.currentTime);
-      console.log('- networkState:', video.networkState);
-      console.log('- error:', video.error);
-      
-      if (streamRef.current) {
-        console.log('🔍 STREAM DEBUG INFO:');
-        console.log('- Stream active:', streamRef.current.active);
-        console.log('- Video tracks:', streamRef.current.getVideoTracks().length);
-        streamRef.current.getVideoTracks().forEach((track, index) => {
-          console.log(`  Track ${index}:`, track.readyState, track.getSettings());
-        });
-      }
+      console.log('Video srcObject:', video.srcObject);
+      console.log('Video dimensions:', video.videoWidth, 'x', video.videoHeight);
+      console.log('Video readyState:', video.readyState);
       
       if (video.videoWidth > 0 && video.videoHeight > 0) {
         setCameraStatus(`✅ Video working: ${video.videoWidth}x${video.videoHeight}`);
       } else {
-        setCameraStatus('❌ Video not displaying - check console for details');
+        setCameraStatus('❌ Video not displaying');
       }
     } else {
-      console.log('❌ videoRef.current is null');
+      console.log('❌ Video element not found');
       setCameraStatus('❌ Video element not found');
     }
   };
@@ -301,16 +304,16 @@ const AttendanceModal = ({ onClose }) => {
               </div>
             </div>
 
-            <div className="camera-status-info">
-              <p>Status: {cameraStatus}</p>
+            <div className="camera-status">
+              <span>{cameraStatus}</span>
             </div>
 
             <div className="modal-actions">
-              <button className="btn secondary" onClick={handleClose}>
+              <button className="btn btn-secondary" onClick={handleClose}>
                 Cancel
               </button>
               <button 
-                className="btn primary" 
+                className="btn btn-primary" 
                 onClick={startCamera}
                 disabled={loading}
               >
@@ -330,49 +333,52 @@ const AttendanceModal = ({ onClose }) => {
         {/* Camera Step */}
         {step === 'camera' && (
           <div className="modal-content">
-            <div className="camera-container">
-              <video 
-                ref={videoRef}
-                autoPlay 
-                playsInline
-                muted
-                className="camera-video"
-              />
-              <div className="camera-overlay">
-                <div className="face-guide"></div>
+            <div className="camera-section">
+              <div className="camera-container">
+                <video 
+                  ref={videoRef}
+                  autoPlay 
+                  playsInline
+                  muted
+                  className="camera-video"
+                />
+                <div className="camera-overlay">
+                  <div className="face-guide">
+                    <div className="guide-circle"></div>
+                    <div className="guide-text">Position face here</div>
+                  </div>
+                </div>
+                
+                <button 
+                  className="debug-btn"
+                  onClick={testVideoElement}
+                >
+                  🔍 Debug
+                </button>
               </div>
               
-              {/* Debug button */}
-              <button 
-                className="debug-btn"
-                onClick={testVideoElement}
-                title="Test video element - Check console for details"
-              >
-                🔍 Debug
-              </button>
-            </div>
-            <canvas ref={canvasRef} style={{ display: 'none' }} />
-
-            <div className="camera-instructions">
-              <p>Position your face within the frame and click capture</p>
-              <div className="camera-status-info">
-                <p>{cameraStatus}</p>
-                {videoRef.current && videoRef.current.videoWidth > 0 && (
-                  <p className="camera-resolution">
-                    Resolution: {videoRef.current.videoWidth}×{videoRef.current.videoHeight}
-                  </p>
-                )}
+              <div className="camera-info">
+                <div className="camera-status">
+                  <div className={`status-indicator ${isCameraActive ? 'active' : ''}`}></div>
+                  <span>{cameraStatus}</span>
+                </div>
+                
+                <div className="capture-instructions">
+                  <p>Make sure your face is clearly visible within the circle</p>
+                </div>
               </div>
             </div>
 
+            <canvas ref={canvasRef} style={{ display: 'none' }} />
+
             <div className="modal-actions">
-              <button className="btn secondary" onClick={handleBackToInstructions}>
-                Back
+              <button className="btn btn-secondary" onClick={handleBackToInstructions}>
+                ← Back
               </button>
               <button 
-                className="btn primary capture-btn"
+                className="btn btn-primary btn-capture"
                 onClick={captureAndRecognize}
-                disabled={loading || !videoRef.current || videoRef.current.videoWidth === 0}
+                disabled={loading || !isCameraActive}
               >
                 {loading ? (
                   <div className="btn-loading">
@@ -380,7 +386,10 @@ const AttendanceModal = ({ onClose }) => {
                     Processing...
                   </div>
                 ) : (
-                  '📸 Capture & Recognize'
+                  <>
+                    <span className="capture-icon">📸</span>
+                    Capture & Recognize
+                  </>
                 )}
               </button>
             </div>
@@ -390,12 +399,12 @@ const AttendanceModal = ({ onClose }) => {
         {/* Result Step */}
         {step === 'result' && result && (
           <div className="modal-content">
-            <div className="result-success">
+            <div className="result-section">
               <div className="success-animation">
                 <div className="checkmark">✓</div>
               </div>
               
-              <h3>Attendance Marked Successfully!</h3>
+              <h3 className="success-title">Attendance Marked Successfully!</h3>
               
               <div className="attendance-details">
                 <div className="detail-item">
@@ -420,7 +429,7 @@ const AttendanceModal = ({ onClose }) => {
             </div>
 
             <div className="modal-actions">
-              <button className="btn primary" onClick={handleClose}>
+              <button className="btn btn-primary btn-done" onClick={handleClose}>
                 Done
               </button>
             </div>

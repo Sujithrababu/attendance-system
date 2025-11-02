@@ -1,335 +1,261 @@
+/* Modal Overlay */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
+  backdrop-filter: blur(5px);
 }
 
+/* Main Modal */
 .attendance-modal {
   background: white;
   border-radius: 20px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  width: 95%;
-  max-width: 600px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 500px;
   max-height: 90vh;
-  overflow-y: auto;
-  animation: scaleIn 0.3s ease-out;
+  overflow: hidden;
+  animation: modalAppear 0.3s ease-out;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes scaleIn {
-  from { 
+@keyframes modalAppear {
+  from {
     opacity: 0;
-    transform: scale(0.9); 
+    transform: scale(0.9) translateY(-20px);
   }
-  to { 
+  to {
     opacity: 1;
-    transform: scale(1); 
+    transform: scale(1) translateY(0);
   }
 }
 
+/* Header */
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem 2rem;
-  border-bottom: 1px solid #e5e7eb;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-radius: 20px 20px 0 0;
+  padding: 24px 24px 0;
+  margin-bottom: 20px;
 }
 
 .modal-header h2 {
+  margin: 0;
+  color: #2d3748;
   font-size: 1.5rem;
   font-weight: 600;
-  margin: 0;
-  color: white;
 }
 
 .close-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 28px;
+  color: #718096;
   cursor: pointer;
-  color: white;
   padding: 0;
-  width: 35px;
-  height: 35px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
+  transition: all 0.2s;
 }
 
 .close-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: scale(1.1);
+  background: #f7fafc;
+  color: #2d3748;
 }
 
+/* Modal Content */
 .modal-content {
-  padding: 2rem;
+  padding: 0 24px 24px;
 }
 
-/* Instructions Step */
+/* Instructions */
 .instructions {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 20px;
+  margin-bottom: 30px;
 }
 
 .instruction-item {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 16px;
-  border-left: 6px solid #667eea;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.instruction-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 15px -3px rgba(0, 0, 0, 0.1);
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border-left: 4px solid #4299e1;
 }
 
 .instruction-icon {
-  font-size: 2rem;
-  min-width: 50px;
-  text-align: center;
+  font-size: 24px;
+  flex-shrink: 0;
 }
 
 .instruction-text h3 {
-  color: #1f2937;
-  margin-bottom: 0.5rem;
-  font-size: 1.1rem;
+  margin: 0 0 4px 0;
+  color: #2d3748;
+  font-size: 1rem;
   font-weight: 600;
 }
 
 .instruction-text p {
-  color: #6b7280;
-  font-size: 0.95rem;
   margin: 0;
-  line-height: 1.5;
+  color: #718096;
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
-/* Camera Step - CRITICAL FIXES */
+/* Camera Section */
+.camera-section {
+  margin-bottom: 24px;
+}
+
 .camera-container {
   position: relative;
-  width: 100%;
-  height: 400px;
-  margin-bottom: 20px;
+  background: #000;
   border-radius: 16px;
   overflow: hidden;
-  background: #000;
-  border: 3px solid #e5e7eb;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
 }
 
 .camera-video {
   width: 100%;
-  height: 100%;
+  height: 350px;
   object-fit: cover;
-  transform: scaleX(-1);
   display: block;
-  background: #000;
-}
-
-/* Fix for black screen - ensure video has content */
-.camera-video:not([srcObject]) {
-  background: linear-gradient(45deg, #1a1a1a, #2d2d2d);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.camera-video:not([srcObject])::after {
-  content: "🎥 Camera Loading...";
-  color: white;
-  font-size: 1.2rem;
-  font-weight: 600;
+  background: #1a202c;
+  transform: scaleX(-1); /* Mirror for front camera */
 }
 
 .camera-overlay {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  right: 0;
+  bottom: 0;
   pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .face-guide {
-  width: 240px;
-  height: 240px;
-  border: 4px solid #10b981;
+  text-align: center;
+}
+
+.guide-circle {
+  width: 200px;
+  height: 200px;
+  border: 3px solid rgba(255, 255, 255, 0.6);
   border-radius: 50%;
-  background: transparent;
   position: relative;
-  box-shadow: 
-    0 0 0 9999px rgba(0, 0, 0, 0.4),
-    inset 0 0 0 2px rgba(255, 255, 255, 0.3);
   animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
-  0%, 100% { border-color: #10b981; }
-  50% { border-color: #34d399; }
+  0%, 100% { border-color: rgba(255, 255, 255, 0.6); }
+  50% { border-color: rgba(66, 153, 225, 0.8); }
 }
 
-.face-guide::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 200px;
-  height: 200px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-}
-
-.camera-instructions {
-  text-align: center;
-  margin: 1.5rem 0;
-  color: #6b7280;
-  font-size: 1rem;
+.guide-text {
+  color: white;
+  font-size: 14px;
+  margin-top: 16px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   font-weight: 500;
 }
 
-/* Loading States */
-.camera-loading {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-  color: white;
-  border-radius: 16px;
-  padding: 2rem;
-}
-
-.loading-spinner {
-  width: 60px;
-  height: 60px;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid #10b981;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 1.5rem;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.loading-text {
-  color: #10b981;
-  font-style: italic;
-  margin-top: 10px;
+/* Camera Info */
+.camera-info {
   text-align: center;
-  font-weight: 500;
-  font-size: 0.95rem;
 }
 
-/* Debug button */
-.debug-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  z-index: 10;
-  font-size: 1.2rem;
+.camera-status {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.debug-btn:hover {
-  background: rgba(0, 0, 0, 0.9);
-  transform: scale(1.1);
-}
-
-/* Status Information */
-.camera-status-info {
-  text-align: center;
-  margin: 1rem 0;
-  padding: 1rem;
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  border-radius: 12px;
-  border: 1px solid #bae6fd;
+  gap: 8px;
+  margin-bottom: 12px;
   font-size: 0.9rem;
+  color: #4a5568;
 }
 
-.camera-status-info p {
-  margin: 5px 0;
-  color: #0369a1;
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #cbd5e0;
 }
 
-.camera-resolution {
-  color: #10b981 !important;
-  font-weight: 700;
-  font-size: 0.85rem;
+.status-indicator.active {
+  background: #48bb78;
+  animation: blink 1.5s infinite;
 }
 
-.error-message {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
-  padding: 1rem;
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
-  text-align: center;
-  font-weight: 500;
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.capture-instructions p {
+  margin: 0;
+  color: #718096;
+  font-size: 0.9rem;
 }
 
 /* Buttons */
 .modal-actions {
   display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  margin-top: 2rem;
+  gap: 12px;
+  justify-content: space-between;
 }
 
 .btn {
-  padding: 0.875rem 1.75rem;
+  padding: 12px 24px;
   border: none;
   border-radius: 12px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  min-width: 140px;
+  transition: all 0.2s;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 8px;
+}
+
+.btn-primary {
+  background: #4299e1;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #3182ce;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(66, 153, 225, 0.4);
+}
+
+.btn-secondary {
+  background: #f7fafc;
+  color: #4a5568;
+  border: 1px solid #e2e8f0;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #edf2f7;
+  border-color: #cbd5e0;
 }
 
 .btn:disabled {
@@ -338,110 +264,102 @@
   transform: none !important;
 }
 
-.btn.secondary {
-  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-  color: #374151;
-  border: 1px solid #d1d5db;
+.btn-capture {
+  background: linear-gradient(135deg, #4299e1, #667eea);
 }
 
-.btn.secondary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.btn-capture:hover:not(:disabled) {
+  background: linear-gradient(135deg, #3182ce, #5a67d8);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-.btn.primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+.capture-icon {
+  font-size: 1.1rem;
 }
 
-.btn.primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+.btn-done {
+  background: #48bb78;
 }
 
-.capture-btn {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4) !important;
+.btn-done:hover:not(:disabled) {
+  background: #38a169;
 }
 
-.capture-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
-  transform: translateY(-2px) !important;
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6) !important;
-}
-
-/* Loading states in buttons */
+/* Loading State */
 .btn-loading {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  justify-content: center;
+  gap: 8px;
 }
 
-.btn-loading .spinner {
-  width: 18px;
-  height: 18px;
+.spinner {
+  width: 16px;
+  height: 16px;
   border: 2px solid transparent;
   border-top: 2px solid currentColor;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
-/* Result Step */
-.result-success {
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Result Section */
+.result-section {
   text-align: center;
-  padding: 1rem 0;
+  padding: 20px 0;
 }
 
 .success-animation {
-  margin-bottom: 2rem;
+  margin-bottom: 24px;
 }
 
 .checkmark {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  width: 80px;
+  height: 80px;
+  background: #48bb78;
   color: white;
-  font-size: 3rem;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
-  animation: bounce 0.6s ease-in-out;
-  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+  font-size: 36px;
+  margin: 0 auto 20px;
+  animation: scaleIn 0.5s ease-out;
 }
 
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); }
-  40% { transform: translateY(-10px) scale(1.1); }
-  60% { transform: translateY(-5px) scale(1.05); }
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
-.result-success h3 {
-  color: #10b981;
-  margin-bottom: 2rem;
-  font-size: 1.75rem;
-  font-weight: 700;
+.success-title {
+  color: #2d3748;
+  margin-bottom: 24px;
+  font-size: 1.4rem;
+  font-weight: 600;
 }
 
 .attendance-details {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  border-radius: 16px;
-  padding: 2rem;
-  margin: 2rem 0;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
 }
 
 .detail-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 0;
+  padding: 8px 0;
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -449,140 +367,71 @@
   border-bottom: none;
 }
 
-.detail-item .label {
-  color: #6b7280;
+.label {
+  color: #718096;
   font-weight: 500;
-  font-size: 1rem;
 }
 
-.detail-item .value {
-  color: #1f2937;
+.value {
+  color: #2d3748;
   font-weight: 600;
-  font-size: 1rem;
 }
 
-.detail-item .confidence {
-  color: #10b981;
-  font-weight: 700;
-  font-size: 1.1rem;
+.value.confidence {
+  color: #48bb78;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Debug Button */
+.debug-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+  transition: all 0.2s;
+}
+
+.debug-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: scale(1.05);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
   .attendance-modal {
-    margin: 10px;
-    width: calc(100% - 20px);
-    border-radius: 16px;
+    width: 95%;
+    margin: 20px;
   }
   
   .modal-header {
-    padding: 1.25rem 1.5rem;
-  }
-  
-  .modal-header h2 {
-    font-size: 1.25rem;
+    padding: 20px 20px 0;
   }
   
   .modal-content {
-    padding: 1.5rem;
+    padding: 0 20px 20px;
   }
   
-  .instruction-item {
-    flex-direction: column;
-    text-align: center;
-    gap: 0.75rem;
-    padding: 1.25rem;
+  .camera-video {
+    height: 300px;
   }
   
-  .instruction-icon {
-    min-width: auto;
-  }
-  
-  .modal-actions {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  
-  .modal-actions .btn {
-    width: 100%;
-    min-width: auto;
-  }
-  
-  .camera-container {
-    height: 350px;
-  }
-  
-  .face-guide {
-    width: 200px;
-    height: 200px;
-  }
-  
-  .face-guide::before {
+  .guide-circle {
     width: 160px;
     height: 160px;
   }
   
-  .checkmark {
-    width: 80px;
-    height: 80px;
-    font-size: 2.5rem;
-  }
-  
-  .result-success h3 {
-    font-size: 1.5rem;
-  }
-  
-  .attendance-details {
-    padding: 1.5rem;
-  }
-  
-  .detail-item {
+  .modal-actions {
     flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .camera-container {
-    height: 300px;
-  }
-  
-  .face-guide {
-    width: 180px;
-    height: 180px;
-  }
-  
-  .face-guide::before {
-    width: 140px;
-    height: 140px;
-  }
-  
-  .modal-content {
-    padding: 1.25rem;
   }
   
   .btn {
-    padding: 0.75rem 1.5rem;
-    font-size: 0.9rem;
-  }
-}
-
-/* Print Styles */
-@media print {
-  .modal-overlay {
-    position: static;
-    background: white;
-  }
-  
-  .attendance-modal {
-    box-shadow: none;
-    max-height: none;
-  }
-  
-  .modal-actions,
-  .close-btn,
-  .debug-btn {
-    display: none;
+    flex: none;
   }
 }
