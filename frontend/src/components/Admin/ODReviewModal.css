@@ -1,0 +1,341 @@
+.od-review-modal {
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  box-shadow: var(--box-shadow-lg);
+  width: 95%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: scaleIn 0.3s ease-out;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-header h2 {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.modal-content {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Review Sections */
+.review-section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.review-section h3 {
+  color: white;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Info Grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-item label {
+  color: #94a3b8;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.info-item span {
+  color: white;
+  font-weight: 600;
+}
+
+/* Activity Details */
+.activity-details {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.activity-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.activity-icon {
+  font-size: 2rem;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(99, 102, 241, 0.2);
+  border-radius: 10px;
+}
+
+.activity-header h4 {
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+}
+
+.activity-type {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}
+
+.activity-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+/* Reason Box */
+.reason-box {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 1rem;
+  border-left: 4px solid var(--primary-color);
+}
+
+.reason-box p {
+  color: #e2e8f0;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* OCR Status */
+.ocr-status {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 1rem;
+  border-left: 4px solid var(--info-color);
+}
+
+.ocr-status.verified {
+  border-left-color: var(--success-color);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.ocr-status.not-verified {
+  border-left-color: var(--warning-color);
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.ocr-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+  color: white;
+}
+
+.ocr-icon {
+  font-size: 1.25rem;
+}
+
+.ocr-text-preview {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  padding: 0.75rem;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+.ocr-text-preview p {
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: 0;
+  font-family: 'Courier New', monospace;
+}
+
+/* Decision Section */
+.decision-options {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.decision-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  flex: 1;
+  min-width: 150px;
+}
+
+.decision-option input {
+  display: none;
+}
+
+.decision-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  transition: var(--transition);
+  font-weight: 600;
+  width: 100%;
+  justify-content: center;
+}
+
+.decision-option input:checked + .decision-label.approve {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: var(--success-color);
+  color: #6ee7b7;
+}
+
+.decision-option input:checked + .decision-label.reject {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: var(--danger-color);
+  color: #fca5a5;
+}
+
+.decision-label:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.notes-section {
+  margin-top: 1rem;
+}
+
+.notes-section label {
+  display: block;
+  color: #94a3b8;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.notes-textarea {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: white;
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+  min-height: 80px;
+  transition: var(--transition);
+}
+
+.notes-textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.notes-textarea::placeholder {
+  color: #64748b;
+}
+
+/* Modal Actions */
+.modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.btn.success {
+  background: linear-gradient(135deg, var(--success-color), #059669);
+}
+
+.btn.success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
+.btn.danger {
+  background: linear-gradient(135deg, var(--danger-color), #dc2626);
+}
+
+.btn.danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .od-review-modal {
+    margin: 10px;
+    width: calc(100% - 20px);
+  }
+  
+  .modal-header {
+    padding: 1rem 1.5rem;
+  }
+  
+  .modal-content {
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+  
+  .review-section {
+    padding: 1rem;
+  }
+  
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .activity-info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .decision-options {
+    flex-direction: column;
+  }
+  
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .modal-actions .btn {
+    width: 100%;
+  }
+}

@@ -1,0 +1,66 @@
+[
+  {
+    "student_id": "23IT56",
+    "name": "Sujithra B",
+    "timestamp": "2025-11-01T13:14:58.072687",
+    "confidence": 0.7406410744062125,
+    "date": "2025-11-01",
+    "time": "13:14:58"
+  },
+  {
+    "student_id": "23IT56",
+    "name": "Sujithra B",
+    "timestamp": "2025-11-01T13:15:10.971771",
+    "confidence": 0.7046512108850312,
+    "date": "2025-11-01",
+    "time": "13:15:10"
+  },
+  {
+    "student_id": "23IT56",
+    "name": "Sujithra B",
+    "timestamp": "2025-11-01T13:15:31.680450",
+    "confidence": 0.6833048602490285,
+    "date": "2025-11-01",
+    "time": "13:15:31"
+  },
+  {
+    "student_id": "23IT56",
+    "name": "Sujithra B",
+    "timestamp": "2025-11-01T13:31:56.208287",
+    "confidence": 0.6043856449717296,
+    "date": "2025-11-01",
+    "time": "13:31:56"
+  },
+  {
+    "student_id": "23IT56",
+    "name": "Sujithra B",
+    "timestamp": "2025-11-01T13:48:21.220897",
+    "confidence": 0.788430239591393,
+    "date": "2025-11-01",
+    "time": "13:48:21"
+  },
+  {
+    "student_id": "23IT56",
+    "name": "Sujithra B",
+    "timestamp": "2025-11-01T18:08:28.412690",
+    "confidence": 0.6677254903225112,
+    "date": "2025-11-01",
+    "time": "18:08:28"
+  },
+  {
+    "student_id": "23IT56",
+    "name": "Sujithra B",
+    "timestamp": "2025-11-01T18:08:46.178794",
+    "confidence": 0.6855996277404053,
+    "date": "2025-11-01",
+    "time": "18:08:46"
+  },
+  {
+    "student_id": "23IT56",
+    "name": "Sujithra B",
+    "timestamp": "2025-11-01T18:29:33.266478",
+    "confidence": 0.7148647868774559,
+    "date": "2025-11-01",
+    "time": "18:29:33"
+  }
+]

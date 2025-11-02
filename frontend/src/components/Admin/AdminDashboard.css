@@ -1,0 +1,290 @@
+.admin-dashboard {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: white;
+}
+
+.admin-content {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Welcome Section */
+.admin-welcome {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.welcome-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #fff, #cbd5e1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.welcome-content p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+  color: #cbd5e1;
+}
+
+.admin-badges {
+  display: flex;
+  gap: 1rem;
+}
+
+.admin-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  backdrop-filter: blur(10px);
+}
+
+.admin-badge.primary {
+  background: rgba(99, 102, 241, 0.2);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  color: #a5b4fc;
+}
+
+.admin-badge.warning {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fcd34d;
+}
+
+.admin-badge.success {
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+}
+
+.badge-icon {
+  font-size: 1.25rem;
+}
+
+/* Navigation Tabs */
+.admin-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border: none;
+  background: transparent;
+  color: #94a3b8;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+}
+
+.tab-btn.active {
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+}
+
+.tab-badge {
+  background: var(--danger-color);
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Tab Content */
+.tab-content {
+  min-height: 400px;
+}
+
+/* Recent Requests */
+.recent-section {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-top: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.recent-section h2 {
+  color: white;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.recent-requests {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.request-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: slideUp 0.6s ease-out;
+}
+
+.request-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.request-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.student-name {
+  font-weight: 600;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.pending {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fcd34d;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.status-badge.approved {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.status-badge.rejected {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.request-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.activity {
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.activity-type {
+  background: rgba(99, 102, 241, 0.2);
+  color: #a5b4fc;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  text-transform: capitalize;
+}
+
+.request-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.ocr-verified {
+  color: #6ee7b7;
+  font-weight: 600;
+}
+
+.no-requests {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 2rem;
+  color: #94a3b8;
+}
+
+.no-requests-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-content {
+    padding: 1rem;
+  }
+  
+  .admin-welcome {
+    flex-direction: column;
+    text-align: center;
+    gap: 1.5rem;
+  }
+  
+  .admin-badges {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .admin-tabs {
+    flex-direction: column;
+  }
+  
+  .recent-requests {
+    grid-template-columns: 1fr;
+  }
+  
+  .welcome-content h1 {
+    font-size: 2rem;
+  }
+}
